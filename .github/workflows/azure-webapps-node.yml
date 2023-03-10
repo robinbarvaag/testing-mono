@@ -34,15 +34,6 @@ jobs:
       - name: Build app
         run: pnpm run build
 
-      - name: Azure Login
-        uses: azure/login@v1
+      - uses: azure/webapps-deploy@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          azure-cli-version: "2.30.0" # specify the version to use
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: testing-mono
-          slot-name: production # optional, default is production slot if not specified.
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
