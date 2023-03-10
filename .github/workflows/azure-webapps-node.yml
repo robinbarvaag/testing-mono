@@ -1,29 +1,48 @@
-trigger:
-  - main
+name: Deploy to Azure Web App
 
-pool:
-  vmImage: "ubuntu-latest"
+on:
+  push:
+    branches:
+      - main
 
-variables:
-  - group: my-azure-devops-variables
+env:
+  NODE_VERSION: 12.x
+  APP_NAME: my-app
+  RESOURCE_GROUP: my-resource-group
+  AZURE_WEBAPP_PACKAGE_PATH: "."
+  APP_SERVICE_PLAN: my-app-service-plan
+  AZURE_LOCATION: westus2
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
-steps:
-  - task: UseNode12@0
-    inputs:
-      versionSpec: "12.x"
-    displayName: "Install Node.js"
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  - script: |
-      npm install -g pnpm
-      pnpm install
-    displayName: "Install pnpm and dependencies"
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
-  - script: |
-      pnpm run build
-    displayName: "Build app"
+      - name: Install pnpm and dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: "build"
-      ArtifactName: "drop"
-    displayName: "Publish build artifacts"
+      - name: Build app
+        run: pnpm run build
+
+      - name: Deploy to Azure Web App
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_NAME }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          app-service-plan: ${{ env.APP_SERVICE_PLAN }}
+          region: ${{ env.AZURE_LOCATION }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          slot-name: production
+          azure-credentials: ${{ env.AZURE_CREDENTIALS }}
