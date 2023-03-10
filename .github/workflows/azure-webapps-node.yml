@@ -11,7 +11,6 @@ env:
   RESOURCE_GROUP: my-resource-group
   AZURE_WEBAPP_PACKAGE_PATH: "."
   APP_SERVICE_PLAN: my-app-service-plan
-  AZURE_LOCATION: westus2
   AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
