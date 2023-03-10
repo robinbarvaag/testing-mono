@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: 12.x
+  NODE_VERSION: 16.x
   APP_NAME: my-app
   RESOURCE_GROUP: my-resource-group
   AZURE_WEBAPP_PACKAGE_PATH: "."
