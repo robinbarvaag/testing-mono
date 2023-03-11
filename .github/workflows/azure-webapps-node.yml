@@ -30,10 +30,13 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install
+        working-directory: apps/web
 
       - name: Build app
         run: pnpm run build
+        working-directory: apps/web
 
       - uses: azure/webapps-deploy@v2
         with:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: apps/web/dist
