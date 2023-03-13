@@ -36,6 +36,10 @@ jobs:
         run: pnpm run build
         working-directory: apps/web
 
+      - name: Copy files
+        run: cp server.js web.config ./dist
+        working-directory: apps/web
+
       - uses: azure/webapps-deploy@v2
         with:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
