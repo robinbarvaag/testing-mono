@@ -37,7 +37,7 @@ jobs:
         working-directory: apps/web
 
       - name: Copy files
-        run: cp server.js web.config ./dist
+        run: cp server.js web.config package.json ./dist
         working-directory: apps/web
 
       - uses: azure/webapps-deploy@v2
